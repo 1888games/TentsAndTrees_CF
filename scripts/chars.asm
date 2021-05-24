@@ -52,8 +52,36 @@ tiles:
 	; tile 14
 	.word	tile_9
 
-		; tile 15
+	; tile 15
 	.word	tile_level
+
+		; tile 16
+	.word	tile_s
+
+
+		; tile 17
+	.word	tile_c
+
+
+	; tile 18
+	.word	tile_o
+
+	; tile 19
+	.word	tile_r
+
+
+		; tile 20
+	.word	tile_e
+
+
+		; tile 21
+	.word	tile_l
+
+			; tile 22
+	.word	tile_v
+
+
+
 
 
 
@@ -196,6 +224,53 @@ tile_b:
 	.byte %10100111
 	.byte %00000000
 
+tile_s:
+
+	.byte %01110010
+	.byte %00011100
+	.byte %00100111
+	.byte %00000000
+
+tile_c:
+	.byte %01110010
+	.byte %00010000
+	.byte %10000111
+	.byte %00000000
+
+tile_o:
+
+	.byte %01110010
+	.byte %10010100
+	.byte %10100111
+	.byte %00000000
+
+tile_r:
+
+	.byte %01100010
+	.byte %10011000
+	.byte %10100101
+	.byte %00000000
+
+tile_e:
+
+	.byte %01110010
+	.byte %00011100
+	.byte %10000111
+	.byte %00000000
+
+
+tile_l:
+	.byte %01000010
+	.byte %00010000
+	.byte %10000111
+	.byte %00000000
+
+tile_v:
+
+	.byte %01010010
+	.byte %10010100
+	.byte %10100010
+	.byte %00000000
 
 
 

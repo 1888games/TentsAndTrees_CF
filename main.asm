@@ -13,6 +13,7 @@ RAM_X	= $2800
 
 CreateGrid:
 
+
 	;// start at grid size 3
 	dci RAM.GridSize
 	li StartGridSize
@@ -30,10 +31,19 @@ CreateGrid:
 	inc 
 	st
 
+
+	dci sfx.ghostEat
+	pi playSong
+
 	;// Title Screen
 	dci	gfx.bitmap.bmp.parameters	; address of parameters
 	pi	blitGraphic
+
+
 	pi WaitForInput
+
+	dci sfx.move
+	pi playSong
 
 	;// Seed our 'random' list
 	lr A, 0
@@ -41,6 +51,12 @@ CreateGrid:
 	st
 
 PlayAgain:
+
+	li	%11000000	;// 3-colour, green background
+	lr	3, A		;// store A to R3
+	pi 	clrscrn 	;// call BIOS clear screen
+
+RedoLevel:
 
 	Load_Ram RAM.Level
 	ai 255
@@ -88,123 +104,8 @@ SetStartScore:
 	Store_Ram RAM.ScoreCounter
 
 	
-	li	%11000000	;// 3-colour, green background
-	lr	3, A		;// store A to R3
-	pi 	clrscrn 	;// call BIOS clear screen
 	;//pi 	clrscrn 
 
-
-
-DisplayScore:
-
-	clr
-	Save_Scratch X_Reg
-
-
-	li 70
-	Store_Ram RAM.X
-
-	li 0
-	Store_Ram RAM.Y
-	lr 0, a
-
-LineLoop:
-
-	li Red
-	lr 1, a
-
-	Load_Ram RAM.X
-	lr 2, a
-
-	Load_Ram RAM.Y
-	lr 3, a
-
-	pi plot
-
-	lr a, 0
-	inc
-	ci 58
-	bz DoneLine
-
-	lr 0, a
-	Inc_Ram RAM.Y
-	jmp LineLoop
-
-DoneLine:
-
-	li 74
-	Store_Ram RAM.X
-
-ScoreLoop:
-		
-	lr A, S
-	GetFromArray_A RAM.Score
-	ai 4
-	lr 5, a
-
-	li Green
-	lr 1, a	
-
-	li Blue
-	lr 2, a
-
-	li 20
-	lr 4, a
-
-	Load_Ram RAM.X
-	lr 3, a
-
-	pi DrawTile
-
-
-	Load_Ram RAM.X
-	ai 5
-	Store_Ram RAM.X
-
-	Inc_Scratch X_Reg
-	ci 5
-	bz ScoreDone
-
-	jmp ScoreLoop
-
-ScoreDone:
-
-	li Green
-	lr 1, a
-
-	li Red
-	lr 2, a
-
-	li 40
-	lr 4, a
-
-	Load_Ram RAM.LevelTens
-	ai 4
-	lr 5, a
-
-	li LevelX
-	lr 3, a
-
-	pi DrawTile
-
-	li Green
-	lr 1, a
-
-	li Red
-	lr 2, a
-
-	li 40
-	lr 4, a
-
-	Load_Ram RAM.LevelDigits
-	ai 4
-	lr 5, a
-
-	li LevelX
-	ai 5
-	lr 3, a
-
-	pi DrawTile
 
 
 CreateTheLevel:
@@ -576,7 +477,9 @@ NextCell:
 
 			dci RAM.GridSize
 			cm
-			bz DrawGrid
+			bnz Okay
+
+			jmp DisplayScore
 
 
 Okay:
@@ -587,6 +490,182 @@ Okay:
 			Inc_Scratch Y_Reg	
 			jmp CreateLoop
 
+DisplayScore:
+
+	clr
+	Save_Scratch X_Reg
+
+
+	li 70
+	Store_Ram RAM.X
+
+	li 0
+	Store_Ram RAM.Y
+	lr 0, a
+
+LineLoop:
+
+	li Red
+	lr 1, a
+
+	Load_Ram RAM.X
+	lr 2, a
+
+	Load_Ram RAM.Y
+	lr 3, a
+
+	pi plot
+
+	lr a, 0
+	inc
+	ci 58
+	bz DoneLine
+
+	lr 0, a
+	Inc_Ram RAM.Y
+	jmp LineLoop
+
+DoneLine:
+
+	li 74
+	Store_Ram RAM.X
+
+ScoreLoop:
+
+	;// Number
+		
+	lr A, S
+	GetFromArray_A RAM.Score
+	ai 4
+	lr 5, a
+
+	li Green
+	lr 1, a	
+
+	li Blue
+	lr 2, a
+
+	li 20
+	lr 4, a
+
+	Load_Ram RAM.X
+	lr 3, a
+
+	pi DrawTile
+
+	;// Char
+
+	lr A, S
+	ai 15
+	lr 5, a
+
+	li Red
+	lr 2, a
+
+	li Transparent
+	lr 1, a
+
+	li 13
+	lr 4, a
+
+
+	Load_Ram RAM.X
+	lr 3, a
+
+	pi DrawTile
+
+
+	Load_Ram RAM.X
+	ai 5
+	Store_Ram RAM.X
+
+	Inc_Scratch X_Reg
+	ci 5
+	bz ScoreDone
+
+	jmp ScoreLoop
+
+ScoreDone:
+
+	li Green
+	lr 1, a
+
+	li Red
+	lr 2, a
+
+	li 40
+	lr 4, a
+
+	Load_Ram RAM.LevelTens
+	ai 4
+	lr 5, a
+
+	li LevelX
+	lr 3, a
+
+	pi DrawTile
+
+
+	li Transparent
+	lr 1, a
+
+	li Blue
+	lr 2, a
+
+	li 33
+	lr 4, a
+
+	li 20
+	lr 5, a
+
+	li LevelX
+	lr 3, a
+
+	pi DrawTile
+
+
+	li Transparent
+	lr 1, a
+
+	li Blue
+	lr 2, a
+
+	li 33
+	lr 4, a
+
+	li 21
+	lr 5, a
+
+	li LevelX
+	ai 5
+	lr 3, a
+
+	pi DrawTile
+
+
+
+
+
+	li Green
+	lr 1, a
+
+	li Red
+	lr 2, a
+
+	li 40
+	lr 4, a
+
+	Load_Ram RAM.LevelDigits
+	ai 4
+	lr 5, a
+
+	li LevelX
+	ai 5
+	lr 3, a
+
+	pi DrawTile
+
+
 
 DrawGrid:
 
@@ -594,7 +673,7 @@ DrawGrid:
 	ci 0
 	bnz LevelOkay
 
-	jmp PlayAgain
+	jmp RedoLevel
 
 
 LevelOkay:
@@ -1000,12 +1079,12 @@ TryAgain:
 	bnz MoveLeft
 
 	lr a, 0
-	ni %00001000
+	ni %00000100
 
 	bnz MoveDown
 
 	lr a, 0
-	ni %00000100
+	ni %00001000
 
 	bz NotUp
 
