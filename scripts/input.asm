@@ -19,9 +19,7 @@ WaitForInput:
 	bz NoWrap1
 	Store_Ram RAM.ScoreThisRound	
 
-
 NoWrap1:
-
 
 	clr						; clear accumulator 
 	outs	0					; enable input from both hand controllers
@@ -29,23 +27,42 @@ NoWrap1:
 	outs	4					; clear latch of port of left hand controller
 	ins	1					; fetch inverted data from right hand controller
 	com						; invert controller data (a %1 now means active)
-	bnz	wait.4.controller.input.end		; if no movement then input is 0 -> no branch
+	bnz	SomeInput1		; if no movement then input is 0 -> no branch
+
+	Store_Ram RAM.ControlDebounce1
+
 	; check the other controller
 	ins	4					; fetch inverted data from left hand controller
 	com						; invert controller data (if bit is 1 it means active)
-	bnz NotZero			; if there's no indata repeat
+	bnz SomeInput2
 
-	Store_Ram RAM.ControlDebounce
+	Store_Ram RAM.ControlDebounce2
 
-NotZero:
-	dci RAM.ControlDebounce
+	li 50
+	lr 1, a
+
+Del2:
+	
+	ds 1
+	bnz Del2
+
+	jmp WaitForInput
+
+SomeInput1:
+
+	dci RAM.ControlDebounce1
 	cm
 	bz WaitForInput
 
-	Store_Ram RAM.ControlDebounce
+	Store_Ram RAM.ControlDebounce1
+	pop
 
-wait.4.controller.input.end:
-	pop						; return from subroutine, controller data in A
+SomeInput2:
 
+	dci RAM.ControlDebounce2
+	cm
+	bz WaitForInput
 
+	Store_Ram RAM.ControlDebounce2
+	pop
 

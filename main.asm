@@ -12,7 +12,11 @@ RAM_X	= $2800
 		include "scripts/macros.asm"
 
 CreateGrid:
+	
 
+	li	%00000000	;// 3-colour, green background
+	lr	3, A		;// store A to R3
+	pi 	clrscrn 	;// call BIOS clear screen
 
 	;// start at grid size 3
 	dci RAM.GridSize
@@ -562,7 +566,7 @@ ScoreLoop:
 	li Red
 	lr 2, a
 
-	li Transparent
+	li $FF
 	lr 1, a
 
 	li 13
