@@ -7,8 +7,7 @@ WaitForInput:
 	bnc NoWrap1
 
 	Load_Ram RAM.ScoreCounter
-	inc
-	inc
+	ai 4
 	Store_Ram RAM.ScoreCounter
 
 	bnc NoWrap1
@@ -38,13 +37,6 @@ NoWrap1:
 
 	Store_Ram RAM.ControlDebounce2
 
-	li 50
-	lr 1, a
-
-Del2:
-	
-	ds 1
-	bnz Del2
 
 	jmp WaitForInput
 

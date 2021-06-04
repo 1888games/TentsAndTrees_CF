@@ -48,4 +48,5 @@ RAM.ScoreHundreds =    	10277
 RAM.ScoreTens = 		10278
 RAM.ScoreDigits =       10279
 RAM.HighScore = 		10280
+RAM.MinTents = 			10281
 

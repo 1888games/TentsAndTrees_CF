@@ -30,7 +30,7 @@ Y_Reg = 52
 
 GridCellSize = 6
 GridCellSizeNeg = 250
-ChanceOfATree = 185
+ChanceOfATree = 170
 StartGridSize = 3
 StartGridSizeNeg = 253
 MaxGridCells = 64

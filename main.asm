@@ -74,6 +74,9 @@ RedoLevel:
 	li 248
 	Store_Ram RAM.GridSizeNeg
 
+	li 14
+	Store_Ram RAM.MinTents
+
 	jmp SetStartScore
 
 NotGrid8:
@@ -82,15 +85,21 @@ NotGrid8:
 	lr 0, a
 	adc
 	lm
-
 	Store_Ram RAM.GridSize
 
 	lr a, 0
 	dci Levels2
 	adc
 	lm
-
 	Store_Ram RAM.GridSizeNeg
+
+
+	lr a, 0
+	dci MinTents
+	adc
+	lm
+	Store_Ram RAM.MinTents
+
 
 SetStartScore:
 
@@ -672,10 +681,17 @@ ScoreDone:
 
 
 DrawGrid:
-
+	
 	Load_Ram RAM.LevelValid
-	ci 0
-	bnz LevelOkay
+	bnz HasTents
+
+	jmp RedoLevel
+HasTents:
+	
+	inc
+	dci RAM.MinTents
+	cm
+	bm LevelOkay
 
 	jmp RedoLevel
 
@@ -1466,9 +1482,9 @@ RandomLookup:
 
 Colours:	.byte Transparent, Green, Red, Red
 
-Levels:	.byte 3, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7
+Levels:		.byte 3, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7
 Levels2: .byte 253, 252, 252, 251, 251, 251, 251, 250, 250, 250, 250, 250, 250, 249, 249, 249, 249, 249, 249, 249, 249
-
+MinTents:	.byte 1, 2, 3, 4, 5, 5, 6, 6, 6, 7, 7, 8, 8, 9, 10, 11, 12, 12, 13, 13, 14
 
 	;//org $0fff                ;	// added only to set a useable rom-size in MESS
     ;//    .byte   $10
